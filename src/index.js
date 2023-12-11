@@ -11,7 +11,7 @@ const PORT = 1234;
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));  // It is basicaly a middleware that helps us to parse the encoded data coming for post requests on url
 
 const tempPath = path.join(__dirname, "../templates");
 const publicPath = path.join(__dirname, "../public");
@@ -20,6 +20,7 @@ app.set('view engine', 'hbs');
 app.set("views", tempPath);
 app.set(express.static(publicPath));
 
+// Function to hash the passwords to make it more secure
 
 async function hashPass(password) {
 
@@ -28,6 +29,7 @@ async function hashPass(password) {
 
 }
 
+// Function to compare enterd password with the stored one
 
 async function compare(userPass, hashPass) {
 
@@ -35,6 +37,14 @@ async function compare(userPass, hashPass) {
     return res;
 
 }
+
+app.get('/login', (req, res) => {
+    res.render("login");
+});
+
+app.get('/signup', (req, res) => {
+    res.render("signup");
+});
 
 
 app.get('/', (req, res) => {
@@ -47,13 +57,6 @@ app.get('/', (req, res) => {
     }
 });
 
-app.get('/login', (req, res) => {
-    res.render("login");
-});
-
-app.get('/signup', (req, res) => {
-    res.render("signup");
-});
 
 app.post('/signup', async (req, res) => {
     try {
@@ -80,7 +83,7 @@ app.post('/signup', async (req, res) => {
 
             res.render("home", { name: req.body.name });
         }
-    } 
+    }
     catch {
         res.send("Error in signup");
     }
